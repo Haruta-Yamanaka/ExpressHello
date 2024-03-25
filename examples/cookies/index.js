@@ -1,3 +1,5 @@
+'use strict'
+
 /**
  * Module dependencies.
  */
@@ -17,7 +19,7 @@ if (process.env.NODE_ENV !== 'test') app.use(logger(':method :url'))
 app.use(cookieParser('my secret here'));
 
 // parses x-www-form-urlencoded
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded())
 
 app.get('/', function(req, res){
   if (req.cookies.remember) {
@@ -36,7 +38,11 @@ app.get('/forget', function(req, res){
 
 app.post('/', function(req, res){
   var minute = 60000;
-  if (req.body.remember) res.cookie('remember', 1, { maxAge: minute });
+
+  if (req.body && req.body.remember) {
+    res.cookie('remember', 1, { maxAge: minute })
+  }
+
   res.redirect('back');
 });
 
